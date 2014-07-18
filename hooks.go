@@ -6,5 +6,5 @@ const AFTER = 10
 
 type Hooks struct {
 	Before []Callback
-	After []Callback
+	After  []Callback
 }

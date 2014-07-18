@@ -10,13 +10,13 @@ type Callback func(*Listener, EventData)
 
 type Listener struct {
 	numEvents int
-	incoming chan Event
+	incoming  chan Event
 	callbacks map[EventID]Callback
-	hooks map[EventID]*Hooks
-	active bool
+	hooks     map[EventID]*Hooks
+	active    bool
 }
 
-func (l *Listener) Start(NumEvents int) (err error){
+func (l *Listener) Start(NumEvents int) (err error) {
 	if l.active {
 		err = errors.New("The listener is already active!")
 		return
@@ -30,7 +30,7 @@ func (l *Listener) Start(NumEvents int) (err error){
 	l.incoming = make(chan Event, l.numEvents)
 	l.callbacks = make(map[EventID]Callback)
 	l.hooks = make(map[EventID]*Hooks)
-	l.Register(stopListener, func(*Listener, EventData){})
+	l.Register(stopListener, func(*Listener, EventData) {})
 	l.active = true
 
 	go l.listen()
@@ -91,26 +91,24 @@ func (l *Listener) Emit(event Event) {
 	l.incoming <- event
 }
 
-
 func (l *Listener) listen() {
-	loop:
-		for {
-			e := <-l.incoming
+	for {
+		e := <-l.incoming
 
-			if e.Event == stopListener {
-				break loop
-			}
-
-			l.runBeforeHooks(e)
-
-			if e.Concurrent {
-				go l.callbacks[e.Event](l, e.Data)
-			} else {
-				l.callbacks[e.Event](l, e.Data)
-			}
-
-			l.runAfterHooks(e)
+		if e.Event == stopListener {
+			return
 		}
+
+		l.runBeforeHooks(e)
+
+		if e.Concurrent {
+			go l.callbacks[e.Event](l, e.Data)
+		} else {
+			l.callbacks[e.Event](l, e.Data)
+		}
+
+		l.runAfterHooks(e)
+	}
 }
 
 func (l *Listener) runBeforeHooks(e Event) {
@@ -132,4 +130,3 @@ func (l *Listener) runHooks(hooks []Callback, e Event) {
 		}
 	}
 }
-

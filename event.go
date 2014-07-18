@@ -5,7 +5,7 @@ type EventID int
 type EventData []interface{}
 
 type Event struct {
-	Event EventID
-	Data EventData
+	Event      EventID
+	Data       EventData
 	Concurrent bool
 }
