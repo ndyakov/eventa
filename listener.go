@@ -30,8 +30,9 @@ func (l *Listener) Start(NumEvents int) (err error) {
 	l.incoming = make(chan Event, l.numEvents)
 	l.callbacks = make(map[EventID]Callback)
 	l.hooks = make(map[EventID]*Hooks)
-	l.Register(stopListener, func(*Listener, EventData) {})
 	l.active = true
+
+	l.Register(stopListener, func(*Listener, EventData) {})
 
 	go l.listen()
 
@@ -58,31 +59,38 @@ func (l *Listener) ListenOn(in chan Event) {
 }
 
 func (l *Listener) Register(event EventID, callback Callback) {
+	if !l.active {
+		l.Start(1)
+	}
+
 	if _, ok := l.hooks[event]; !ok {
 		l.hooks[event] = new(Hooks)
-	}
-
-	if l.hooks[event].After == nil {
-		l.hooks[event].After = make([]Callback, 1)
-	}
-
-	if l.hooks[event].Before == nil {
-		l.hooks[event].Before = make([]Callback, 1)
+		l.hooks[event].Initialize()
 	}
 
 	l.callbacks[event] = callback
 }
 
-func (l *Listener) RegisterIfNil(event EventID, callback Callback) {
+func (l *Listener) RegisterIfNil(event EventID, callback Callback) (err error) {
 	if l.callbacks[event] == nil {
 		l.Register(event, callback)
+		return
 	}
+
+	return errors.New("This event is already set!")
+}
+
+func (l *Listener) Registered(event EventID) bool {
+	if l.callbacks[event] == nil {
+		return false
+	}
+	return true
 }
 
 func (l *Listener) RegisterHook(t int, event EventID, callback Callback) {
-	if t == BEFORE {
+	if t == Before {
 		l.hooks[event].Before = append(l.hooks[event].Before, callback)
-	} else if t == AFTER {
+	} else if t == After {
 		l.hooks[event].After = append(l.hooks[event].After, callback)
 	}
 }
