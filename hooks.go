@@ -1,8 +1,8 @@
 package eventa
 
-const Before = -10
+const BEFORE = -10
 
-const After = 10
+const AFTER = 10
 
 type Hooks struct {
 	Before []Callback

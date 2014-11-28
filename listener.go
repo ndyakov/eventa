@@ -88,9 +88,9 @@ func (l *Listener) Registered(event EventID) bool {
 }
 
 func (l *Listener) RegisterHook(t int, event EventID, callback Callback) {
-	if t == Before {
+	if t == BEFORE {
 		l.hooks[event].Before = append(l.hooks[event].Before, callback)
-	} else if t == After {
+	} else if t == AFTER {
 		l.hooks[event].After = append(l.hooks[event].After, callback)
 	}
 }

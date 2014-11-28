@@ -1,7 +1,7 @@
 package eventa_test
 
 import (
-	"./"
+	"github.com/ndyakov/eventa"
 	"testing"
 )
 
@@ -16,9 +16,9 @@ func TestHooks_Initialize(t *testing.T) {
 }
 
 func TestHooks_Before(t *testing.T) {
-	equals(t, -10, eventa.Before)
+	equals(t, -10, eventa.BEFORE)
 }
 
 func TestHooks_After(t *testing.T) {
-	equals(t, 10, eventa.After)
+	equals(t, 10, eventa.AFTER)
 }

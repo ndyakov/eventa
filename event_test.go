@@ -1,7 +1,7 @@
 package eventa_test
 
 import (
-	"./"
+	"github.com/ndyakov/eventa"
 	"testing"
 )
 
