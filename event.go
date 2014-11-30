@@ -1,11 +1,13 @@
 package eventa
 
-type EventID int
-
-type EventData []interface{}
-
 type Event struct {
-	Event      EventID
-	Data       EventData
+	Event      int
+	Data       map[string]interface{}
 	Concurrent bool
+}
+
+func NewEvent(eventID int) *Event {
+	e := &Event{Event: eventID}
+	e.Data = make(map[string]interface{})
+	return e
 }

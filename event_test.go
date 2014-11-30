@@ -6,8 +6,6 @@ import (
 )
 
 func TestEventStructShouldHaveEventID(t *testing.T) {
-	var event eventa.EventID
-	event = 10
-	e := eventa.Event{Event: event}
+	e := eventa.NewEvent(10)
 	assert(t, e.Event == 10, "EventID is not set properly")
 }
