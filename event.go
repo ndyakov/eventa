@@ -1,13 +1,14 @@
 package eventa
 
+import "github.com/ndyakov/whatever"
+
 type Event struct {
-	Event      int
-	Data       map[string]interface{}
-	Concurrent bool
+	Name   string
+	Params whatever.Params
 }
 
-func NewEvent(eventID int) *Event {
-	e := &Event{Event: eventID}
-	e.Data = make(map[string]interface{})
+func NewEvent(eventName string) *Event {
+	e := &Event{Name: eventName}
+	e.Params = whatever.Params{}
 	return e
 }

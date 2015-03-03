@@ -2,11 +2,13 @@ package eventa_test
 
 import (
 	"fmt"
-	"github.com/ndyakov/eventa"
 	"path/filepath"
 	"reflect"
 	"runtime"
 	"testing"
+
+	"github.com/ndyakov/eventa"
+	"github.com/ndyakov/whatever"
 )
 
 // assert fails the test if the condition is false.
@@ -46,17 +48,16 @@ func equals(tb testing.TB, exp, act interface{}) {
 }
 
 func TestCallbackTriggered(t *testing.T) {
-	incoming := make(chan interface{})
-	printEvent := func(l *eventa.Listener, data map[string]interface{}) {
-		incoming <- data["message"]
+	incoming := make(chan string)
+	printEvent := func(l *eventa.Listener, data whatever.Params) {
+		incoming <- data.Get("message")
 	}
 
 	l := eventa.NewListener(1)
-	l.Register(32, printEvent)
+	l.On("32", printEvent)
 
-	e := eventa.NewEvent(32)
-	e.Concurrent = true
-	e.Data["message"] = "Hello World"
+	e := eventa.NewEvent("32")
+	e.Params.Add("message", "Hello World")
 	l.Emit(e)
 	equals(t, "Hello World", <-incoming)
 
