@@ -4,18 +4,18 @@ import "github.com/ndyakov/whatever"
 
 type Callback func(*Listener, whatever.Params)
 
-type Callbacks struct {
+type callbacks struct {
 	Permanent []Callback
 	Once      []Callback
 }
 
-func NewCallbacks() *Callbacks {
-	c := &Callbacks{}
-	c.Initialize()
+func newCallbacks() *callbacks {
+	c := &callbacks{}
+	c.initialize()
 	return c
 }
 
-func (c *Callbacks) Initialize() {
+func (c *callbacks) initialize() {
 	c.Permanent = make([]Callback, 1)
 	c.Once = make([]Callback, 1)
 }

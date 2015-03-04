@@ -8,6 +8,6 @@ import (
 
 func TestListener_Start(t *testing.T) {
 	l := new(eventa.Listener)
-	ok(t, l.Start(10))
-	notok(t, l.Start(10))
+	ok(t, l.Start())
+	notok(t, l.Start())
 }

@@ -53,7 +53,7 @@ func TestCallbackTriggered(t *testing.T) {
 		incoming <- data.Get("message")
 	}
 
-	l := eventa.NewListener(1)
+	l := eventa.NewListener()
 	l.On("32", printEvent)
 
 	e := eventa.NewEvent("32")
