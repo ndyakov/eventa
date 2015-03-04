@@ -5,9 +5,8 @@ import "github.com/ndyakov/whatever"
 type Callback func(*Listener, whatever.Params)
 
 type Callbacks struct {
-	Concurrent []Callback
-	Sequential []Callback
-	Once       []Callback
+	Permanent []Callback
+	Once      []Callback
 }
 
 func NewCallbacks() *Callbacks {
@@ -17,7 +16,6 @@ func NewCallbacks() *Callbacks {
 }
 
 func (c *Callbacks) Initialize() {
-	c.Concurrent = make([]Callback, 1)
-	c.Sequential = make([]Callback, 1)
+	c.Permanent = make([]Callback, 1)
 	c.Once = make([]Callback, 1)
 }

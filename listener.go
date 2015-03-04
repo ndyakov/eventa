@@ -48,7 +48,6 @@ func (l *Listener) listen() {
 		}
 
 		l.runCallbacks(e, true)
-		// execute listeners
 	}
 }
 
@@ -72,12 +71,7 @@ func (l *Listener) Emit(event *Event) {
 
 func (l *Listener) On(eventName string, callback Callback) {
 	l.initIfNeeded(eventName)
-	l.callbacks[eventName].Sequential = append(l.callbacks[eventName].Sequential, callback)
-}
-
-func (l *Listener) ConcurrentOn(eventName string, callback Callback) {
-	l.initIfNeeded(eventName)
-	l.callbacks[eventName].Concurrent = append(l.callbacks[eventName].Concurrent, callback)
+	l.callbacks[eventName].Permanent = append(l.callbacks[eventName].Permanent, callback)
 }
 
 func (l *Listener) OnceOn(eventName string, callback Callback) {
@@ -102,21 +96,15 @@ func (l *Listener) ListenOn(in chan *Event) {
 }
 
 func (l *Listener) runCallbacks(e *Event, concurrent bool) {
-	for _, callback := range l.callbacks[e.Name].Concurrent {
+	for _, callback := range l.callbacks[e.Name].Permanent {
 		if callback != nil {
 			go callback(l, e.Params)
 		}
 	}
 
-	for _, callback := range l.callbacks[e.Name].Sequential {
-		if callback != nil {
-			callback(l, e.Params)
-		}
-	}
-
 	for _, callback := range l.callbacks[e.Name].Once {
 		if callback != nil {
-			callback(l, e.Params)
+			go callback(l, e.Params)
 		}
 	}
 
